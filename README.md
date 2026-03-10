@@ -10,7 +10,7 @@
 
 
 
-##AI-powered adaptive testing prototype built with FastAPI and MongoDB.
+#AI-powered adaptive testing prototype built with FastAPI and MongoDB.
 
 ## Overview
 
