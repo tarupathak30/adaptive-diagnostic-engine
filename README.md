@@ -1,5 +1,12 @@
 # Adaptive Test Engine
-
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-4ea94b)
+![Groq](https://img.shields.io/badge/LLM-Groq-F55036)
+![Architecture](https://img.shields.io/badge/Architecture-Modular-brightgreen)
+![API](https://img.shields.io/badge/API-REST-blue)
+![Project](https://img.shields.io/badge/Type-Adaptive%20Testing%20Engine-blueviolet)
+![Status](https://img.shields.io/badge/Status-Prototype-orange)
 AI-powered adaptive testing prototype built with FastAPI and MongoDB.
 
 ## Overview
