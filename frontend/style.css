@@ -1,0 +1,18 @@
+body{
+    font-family: Arial;
+    margin:40px;
+    background:#f5f7fb;
+}
+
+button{
+    padding:10px 20px;
+    margin:10px 0;
+    cursor:pointer;
+}
+
+#questionBox{
+    margin-top:20px;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+}

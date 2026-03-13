@@ -1,36 +1,46 @@
 from typing import List
+from math import exp
 from app.database import questions_collection
+
 
 def clamp(value, min_val=0.1, max_val=1.0):
     return max(min_val, min(value, max_val))
 
 
+def expected_probability(ability: float, difficulty: float) -> float:
+    """
+    Logistic function estimating probability that user answers correctly.
+    """
+    return 1 / (1 + exp(-(ability - difficulty)))
+
+
 def update_ability(current_ability: float, difficulty: float, correct: bool) -> float:
     """
-    Simple adaptive update rule.
+    Improved adaptive update rule using prediction error.
 
-    Correct answer:
-        increase ability slightly depending on question difficulty
-
-    Incorrect answer:
-        decrease ability proportionally to difficulty
+    If user performs better than expected -> ability increases
+    If worse than expected -> ability decreases
     """
 
-    if correct:
-        current_ability = current_ability + 0.1 * (1 - difficulty)
-    else:
-        current_ability = current_ability - 0.1 * difficulty
+    learning_rate = 0.2
 
-    return clamp(current_ability)
+    expected = expected_probability(current_ability, difficulty)
+    actual = 1.0 if correct else 0.0
+
+    error = actual - expected
+
+    new_ability = current_ability + learning_rate * error
+
+    return clamp(new_ability)
 
 
 async def select_next_question(ability: float, asked_question_ids: List[str]):
     """
-    Select question with difficulty closest to current ability.
+    Select question whose difficulty is closest to current ability.
     """
 
     cursor = questions_collection.find(
-        {"_id": {"$nin": asked_question_ids}}
+        {"id": {"$nin": asked_question_ids}}
     )
 
     questions = await cursor.to_list(length=100)

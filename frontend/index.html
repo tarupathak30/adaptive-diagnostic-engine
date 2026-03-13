@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Adaptive Test</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h1>Adaptive Testing Engine</h1>
+
+<button onclick="startSession()">Start Test</button>
+
+<div id="questionBox"></div>
+
+<button onclick="submitAnswer()">Submit Answer</button>
+
+<div id="progress">Questions answered: 0 / 10</div>
+
+<canvas id="abilityChart" width="400" height="200"></canvas>
+
+<button onclick="generatePlan()">Generate Study Plan</button>
+
+<pre id="studyPlan"></pre>
+
+<script src="script.js"></script>
+
+</body>
+</html>
