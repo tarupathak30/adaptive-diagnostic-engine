@@ -51,6 +51,20 @@ function showQuestion(q){
 }
 
 
+
+function showEndScreen(message){
+
+    document.getElementById("questionBox").innerHTML =
+        `<h2>Test Completed</h2>
+         <p>${message}</p>`
+
+    document.getElementById("progress").innerText =
+        `Questions answered: ${questionCount}`
+
+    // disable submit button
+    document.querySelector("button[onclick='submitAnswer()']").disabled = true
+}
+
 // submit answer 
 // endpoint - POST/submit-answer 
 
@@ -74,7 +88,7 @@ async function submitAnswer(){
 
         body:JSON.stringify({
             session_id: sessionId,
-            question_id: currentQuestion.id,
+            question_id: currentQuestion.mongo_id,
             selected_answer: selected
         })
     })
@@ -92,15 +106,16 @@ async function submitAnswer(){
     questionCount++
 
     document.getElementById("progress").innerText =
-        `Questions answered: ${questionCount}/10`
+        `Questions answered: ${questionCount}`
 
     // show next question
+    if(data.test_finished){
+        showEndScreen(data.message || "You reached the end of the test.")
+        return
+    }
+
     if(data.next_question){
         showQuestion(data.next_question)
-    }
-    else{
-        document.getElementById("questionBox").innerHTML =
-            "<h3>Test complete</h3>"
     }
 }
 

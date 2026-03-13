@@ -25,6 +25,7 @@ class AnswerRecord(BaseModel):
     question_id: str
     difficulty: float
     correct: bool
+    topic : str 
 
 class UserSession(BaseModel):
     user_id: str

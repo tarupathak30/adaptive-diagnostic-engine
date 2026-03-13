@@ -21,15 +21,26 @@ async def validate_answer(question_id: str, selected_answer: str):
 
 async def get_next_adaptive_question(ability, asked_ids):
 
-    question = await select_next_question(ability, asked_ids)
+    result = await select_next_question(ability, asked_ids)
 
-    if not question:
+    if not result:
         return None
 
+    # if no more questions available
+    if result["test_finished"]:
+        return None
+
+    question = result["question"]
+
+    print("QUESTION OBJECT:", question)
+
+
+
     return {
-        "id": str(question["_id"]),
-        "question": question["question"],
-        "options": question["options"],
-        "difficulty": question["difficulty"],
-        "topic": question["topic"]
-    }
+    "id": question["id"],                 # for frontend display
+    "mongo_id": str(question["_id"]),     # for backend filtering
+    "question": question["question"],
+    "options": question["options"],
+    "difficulty": question["difficulty"],
+    "topic": question["topic"]
+}

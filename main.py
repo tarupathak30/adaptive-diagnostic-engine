@@ -18,6 +18,5 @@ app.add_middleware(
 # serve front end 
 app.mount("/ui", StaticFiles(directory="frontend", html=True), name="ui")
 
-
-app.include_router(session_router)
-app.include_router(question_router)
+app.include_router(session_router, prefix="")   # already at root, fine
+app.include_router(question_router, prefix="")

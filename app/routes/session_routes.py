@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from bson import ObjectId
+
 from app.database import sessions_collection
 from app.models import AnswerSubmission
 from app.services.question_service import (
@@ -27,9 +28,16 @@ async def start_session(user_id: str):
 
     first_question = await get_next_adaptive_question(0.5, [])
 
+    if not first_question:
+        raise HTTPException(500, "No questions available")
+
     await sessions_collection.update_one(
         {"_id": result.inserted_id},
-        {"$set": {"current_question": first_question["id"]}}
+        {
+            "$set": {
+                "current_question": first_question["mongo_id"]
+            }
+        }
     )
 
     return {
@@ -60,7 +68,7 @@ async def submit_answer(payload: AnswerSubmission):
     )
 
     session["questions_answered"].append({
-        "question_id": payload.question_id,
+        "question_id": payload.question_id,   # must be Mongo _id
         "difficulty": difficulty,
         "correct": correct,
         "topic": topic
@@ -73,13 +81,17 @@ async def submit_answer(payload: AnswerSubmission):
         asked_ids
     )
 
+    next_question_id = next_q["mongo_id"] if next_q else None
+
     await sessions_collection.update_one(
         {"_id": ObjectId(payload.session_id)},
-        {"$set": {
-            "current_ability": ability,
-            "questions_answered": session["questions_answered"],
-            "current_question": next_q["id"] if next_q else None
-        }}
+        {
+            "$set": {
+                "current_ability": ability,
+                "questions_answered": session["questions_answered"],
+                "current_question": next_question_id
+            }
+        }
     )
 
     return {
@@ -91,6 +103,9 @@ async def submit_answer(payload: AnswerSubmission):
 
 @router.get("/generate-study-plan/{session_id}")
 async def generate_plan(session_id: str):
+    # Guard against "null" or garbage IDs from frontend
+    if not session_id or session_id == "null" or len(session_id) != 24:
+        raise HTTPException(status_code=400, detail="Invalid session ID")
 
     session = await sessions_collection.find_one(
         {"_id": ObjectId(session_id)}
@@ -111,7 +126,9 @@ async def generate_plan(session_id: str):
         a["topic"] for a in answers if not a["correct"]
     ]
 
-    correct_count = sum(1 for a in answers if a["correct"])
+    correct_count = sum(
+        1 for a in answers if a["correct"]
+    )
 
     plan = await generate_study_plan(
         session["current_ability"],
