@@ -29,7 +29,7 @@ After the test, an AI-generated study plan is produced.
 - FastAPI
 - MongoDB
 - Motor async driver
-- OpenAI API
+- Groq API 
 
 ---
 
@@ -45,7 +45,7 @@ cp .env.example .env
 
 Run server:
 
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 
 Seed database:
 
@@ -62,21 +62,7 @@ GET /generate-study-plan/{session_id}
 
 ---
 
-## Adaptive Algorithm
 
-Ability starts at 0.5.
-
-Correct answer:
-
-ability = ability + 0.1 × (1 − difficulty)
-
-Incorrect answer:
-
-ability = ability − 0.1 × difficulty
-
-Ability is clamped between 0.1 and 1.0.
-
-The next question selected has difficulty closest to the student's ability.
 
 ---
 
