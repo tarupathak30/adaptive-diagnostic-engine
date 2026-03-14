@@ -3,16 +3,28 @@ let currentQuestion = null
 let abilityHistory = [0.5]
 let questionCount = 0
 
+
 let chart = new Chart(document.getElementById("abilityChart"), {
     type: "line",
     data: {
         labels: [0],
         datasets: [{
             label: "Ability",
-            data: abilityHistory
+            data: abilityHistory,
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 4
         }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,  // keep this
+        plugins: {
+            legend: { display: false }
+        }
     }
 })
+
 
 
 // start the session ---> endpoint is POST/start-session 
