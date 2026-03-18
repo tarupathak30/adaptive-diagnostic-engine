@@ -74,5 +74,3 @@ AI tools were used to:
 
 All generated code was reviewed and adapted manually during development.
 
-## 📊 View 2PL Notebook (with outputs)
-👉 https://nbviewer.org/github/your-username/repo/blob/main/2PL_IRT_pipeline.ipynb
